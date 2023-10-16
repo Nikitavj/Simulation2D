@@ -2,7 +2,7 @@ package simulation2d.actions.intitaction;
 
 import simulation2d.Coordinate;
 import simulation2d.MapEntity;
-import simulation2d.Simulation;
+import simulation2d.actions.Action;
 import simulation2d.actions.NameEntity;
 import simulation2d.entity.Entity;
 import simulation2d.entity.Grass;
@@ -12,7 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.Set;
 
-public class InstallerObjectsMap {
+public class InstallerObjectsMap extends Action {
 
     int count;
     Random random;
@@ -21,44 +21,6 @@ public class InstallerObjectsMap {
         this.random = new Random();
     }
 
-    public boolean setObjectsOnTheMap(MapEntity map) {
-
-        arrangeObjectsOfType(map, NameEntity.TREE);
-        arrangeObjectsOfType(map, NameEntity.ROCK);
-        arrangeObjectsOfType(map, NameEntity.HERBIVORE);
-        arrangeObjectsOfType(map, NameEntity.PREDATOR);
-        arrangeObjectsOfType(map, NameEntity.GRASS);
-
-        return true;
-    }
-
-    private boolean arrangeObjectsOfType(MapEntity map, NameEntity nameEntity) {
-        int numbers = 0;
-
-        switch (nameEntity) {
-            case GRASS:
-                numbers = Simulation.numberOfGrass;
-                break;
-            case PREDATOR:
-                numbers = Simulation.numberOfPredators;
-                break;
-            case HERBIVORE:
-                numbers = Simulation.numberOfHerbivore;
-                break;
-            case ROCK:
-                numbers = Simulation.numberOfRock;
-                break;
-            case TREE:
-                numbers = Simulation.numberOfTree;
-                break;
-            default:
-                numbers = 0;
-        }
-
-        addCreatureOnMap(map, nameEntity, numbers);
-
-        return true;
-    }
 
     public boolean addCreatureOnMap(MapEntity map, NameEntity nameEntity, int numbers) {
         Set<Coordinate> keySet = map.getSetKey();
@@ -98,7 +60,7 @@ public class InstallerObjectsMap {
         count++;
         if (count == 5) {
             if (map.getEntitysByClass(Grass.class) < 30) {
-                arrangeObjectsOfType(map, NameEntity.GRASS);
+                addCreatureOnMap(map, NameEntity.GRASS, NameEntity.GRASS.getNumber());
             }
             count = 0;
             return true;
