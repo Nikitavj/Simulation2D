@@ -1,19 +1,31 @@
 package simulation2d.actions.turnaction;
-
-import simulation2d.MapEntity;
 import simulation2d.actions.Action;
-import simulation2d.actions.intitaction.InstallerObjectsMap;
+import simulation2d.entity.creature.Creature;
+import java.util.LinkedList;
 
-public class TurnAction extends Action {
+public abstract class TurnAction extends Action {
 
-    MoveSimulation moveSimulation = new MoveSimulation();
-    InstallerObjectsMap installerObjectsMap = new InstallerObjectsMap();
+    BreadsFirstSearch breadsFirstSearch = new BreadsFirstSearch();
+    Astar astar = new Astar();
+    Step step = new Step();
 
-    public boolean makeMoveCreatures(MapEntity map, BreadsFirstSearch breadsFirstSearch) {
-        if(!moveSimulation.makeMoveCreatures(map, breadsFirstSearch, installerObjectsMap)) {
-            return false;
+    public void perform() {
+        map.countCycleIncrement();
+        for (Creature creature: listCreature()) {
+            if (creature.hp > 0) {
+                breadsFirstSearch.breadSearch(map, creature);
+                astar.findePath(map, creature);
+                step.makeStepCreature(map, creature);
+                reproduct(creature);
+            } else {
+                map.listRemovedEntity.add(creature);
+                map.removeEntity(creature.coordinate);
+            }
+
         }
-        installerObjectsMap.addGrass(map);
-        return true;
     }
+
+    public abstract LinkedList<Creature> listCreature();
+
+    public abstract void reproduct(Creature creature);
 }

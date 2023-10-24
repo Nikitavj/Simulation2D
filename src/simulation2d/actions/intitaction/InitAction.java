@@ -2,28 +2,42 @@ package simulation2d.actions.intitaction;
 
 import simulation2d.Coordinate;
 import simulation2d.MapEntity;
-import simulation2d.Simulation;
 import simulation2d.actions.Action;
-import simulation2d.actions.NameEntity;
 import simulation2d.entity.Entity;
-import simulation2d.entity.Grass;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import java.util.Set;
 
-public class InitAction extends Action {
+public abstract class InitAction extends Action {
 
-    InstallerObjectsMap installerObjectsMap = new InstallerObjectsMap();
+    MapEntity map;
+    Random random = new Random();
+    int numbersEntity;
 
-    public boolean setObjectsOnTheMap(MapEntity map) {
-
-        installerObjectsMap.addCreatureOnMap(map, NameEntity.TREE, NameEntity.TREE.getNumber());
-        installerObjectsMap.addCreatureOnMap(map, NameEntity.ROCK, NameEntity.ROCK.getNumber());
-        installerObjectsMap.addCreatureOnMap(map, NameEntity.HERBIVORE, NameEntity.HERBIVORE.getNumber());
-        installerObjectsMap.addCreatureOnMap(map, NameEntity.PREDATOR, NameEntity.PREDATOR.getNumber());
-        installerObjectsMap.addCreatureOnMap(map, NameEntity.GRASS, NameEntity.GRASS.getNumber());
-        return true;
+    @Override
+    public void perform() {
+        addEntityOnMap(numbersEntity);
     }
+
+    public void addEntityOnMap(int numbers) {
+        Set<Coordinate> keySet = map.getSetKey();
+
+        for (int i = 0; i < numbers; i++) {
+            boolean containsKey = true;
+            while (containsKey) {
+                Coordinate coordinateThis = getRandomeCoordinate();
+                if (!keySet.contains(coordinateThis)) {
+                    Entity entity = produseEntity();
+                    entity.coordinate = coordinateThis;
+                    map.addEntity(coordinateThis, entity);
+                    containsKey = false;
+                }
+            }
+        }
+    }
+
+    public Coordinate getRandomeCoordinate() {
+        return new Coordinate(random.nextInt(map.getSizeX()), random.nextInt(map.getSizeY()));
+    }
+
+    public abstract Entity produseEntity();
 }

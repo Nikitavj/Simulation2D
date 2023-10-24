@@ -1,7 +1,5 @@
 package simulation2d;
 
-import simulation2d.actions.NameEntity;
-
 public class Renderer {
 
     public Renderer() {
@@ -13,7 +11,7 @@ public class Renderer {
                 if (map.containsCoordinate(new Coordinate(x, y))) {
                     System.out.print(map.getEntity(new Coordinate(x, y)).ikon);
                 } else {
-                    System.out.print(NameEntity.FLOOR.getIcon());
+                    System.out.print("\u001b[48;5;252m\u001b[38;5;250m⟦ ⟧\u001b[0m");
                 }
             }
             System.out.println();

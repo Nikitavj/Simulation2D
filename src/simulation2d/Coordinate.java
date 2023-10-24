@@ -10,7 +10,6 @@ public class Coordinate implements Comparator<Coordinate> {
     public int approcsimationHeuristic;
     public Coordinate coordinatePrevious;
 
-
     public Coordinate(int x, int y) {
         if (x < 50 & y < 50) {
             this.x = x;
@@ -42,5 +41,4 @@ public class Coordinate implements Comparator<Coordinate> {
         result = 31 * result + y;
         return result;
     }
-
 }

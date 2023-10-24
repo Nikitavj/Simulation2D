@@ -3,7 +3,6 @@ package simulation2d.actions.turnaction;
 import simulation2d.Coordinate;
 import simulation2d.MapEntity;
 import simulation2d.entity.creature.Creature;
-
 import java.util.*;
 
 public class Astar {
@@ -26,6 +25,7 @@ public class Astar {
 
     public boolean findePath(MapEntity map, Creature creature) {
 
+        if (creature.finalCoordinat == null) return false;
         openQueueCoordinate.clear();
         closedSetCoordinate.clear();
         listNeighbours.clear();

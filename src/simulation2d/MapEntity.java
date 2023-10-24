@@ -2,21 +2,21 @@ package simulation2d;
 
 import simulation2d.entity.*;
 import simulation2d.entity.creature.Creature;
+import simulation2d.entity.creature.Herbivore;
+import simulation2d.entity.creature.Predator;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MapEntity {
     private int sizeX;
     private int sizeY;
-    private HashMap<Coordinate, Entity> mapEntity;
+    private HashMap<Coordinate, Entity> mapEntity = new HashMap<>();
+    public Set<Entity> listRemovedEntity = new HashSet<>();
+    private int countCycle = 0;
 
     public MapEntity(int sizeX, int sizeY) {
         this.sizeX = sizeX;
         this.sizeY = sizeY;
-        this.mapEntity = new HashMap<>();
     }
 
     public int getSizeX() {
@@ -35,6 +35,26 @@ public class MapEntity {
         return mapEntity.values();
     }
 
+    public Collection<Creature> getCreatures() {
+        Collection<Creature> listCreature = new HashSet<>();
+        for (Entity entity : mapEntity.values()) {
+            if (entity instanceof Predator || entity instanceof Herbivore) {
+                listCreature.add((Creature) entity);
+            }
+        }
+        return listCreature;
+    }
+
+    public int getNumberGrass() {
+        int count = 0;
+        for (Entity entity: mapEntity.values()) {
+            if (entity instanceof Grass) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public void removeEntity(Coordinate coordinate) {
         mapEntity.remove(coordinate);
     }
@@ -51,9 +71,17 @@ public class MapEntity {
         return mapEntity.get(coordinate);
     }
 
-    public <T extends Entity> int  getEntitysByClass(Class<T> entityClass) {
+    public void countCycleIncrement() {
+        countCycle++;
+    }
+
+    public int getCountCycle() {
+        return countCycle;
+    }
+
+    public <T extends Entity> int getEntitysByClass(Class<T> entityClass) {
         int count = 0;
-        for (Entity entry: mapEntity.values()) {
+        for (Entity entry : mapEntity.values()) {
             if (entry.getClass().equals(entityClass)) {
                 count++;
             }
@@ -63,11 +91,11 @@ public class MapEntity {
 
     public <T extends Creature> int getHPbyClass(Class<T> entityClass) {
         int countHP = 0;
-        for (Entity entry: mapEntity.values()) {
+        for (Entity entry : mapEntity.values()) {
             if (entry.getClass().equals(entityClass)) {
-                countHP += ((Creature)entry).hp;
+                countHP += ((Creature) entry).hp;
             }
         }
         return countHP;
     }
- }
+}
